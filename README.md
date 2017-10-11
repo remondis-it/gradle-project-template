@@ -27,7 +27,7 @@ This is a gradle project template. It can be used to create new projects for pub
   * JUnit
   * Mockito
   * AssertJ
-* Pre-configured build script for (Travis CI)[https://travis-ci.org/]
+* Pre-configured build script for [Travis CI](https://travis-ci.org/)
 * This beautiful README.md for use as draft for your project's readme.
 
 ## Getting started
