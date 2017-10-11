@@ -47,7 +47,7 @@ The following instructions where taken from [this article](http://central.sonaty
 
 1. Generate a GPG Key Pair using GnuPG: `gpg --gen-key`.
 2. List the keys: `gpg2 --list-keys` and expect the output to be something similar to `pub   2048R/<YOUR_KEYID_HERE> 2011-08-31 [expires: 2012-02-27]`
-3. Upload the public key to a public key server: `gpg2 --keyserver hkp://pool.sks-keyservers.net --send-keys <YOUR_KEYID_HERE>`
+3. Upload the public key to a public key server: `gpg2 --keyserver hkp://pool.sks-keyservers.net --send-keys <YOUR_KEYID_HERE>` or export the public key in ASCII format with `gpg -a --output public-key.asc --export <YOUR_KEYID_HERE>`. The latter can be used if you want to upload the public key to a server using a webinterface like [MIT PGP Public Key Server](http://pgp.mit.edu/).
 4. Specify a password used to (de)encrypt the private signing key. This password is referenced by `<YOUR_PASSWORD_HERE>` in the following steps.
 5. Encrypt your private signing key using the above generated secret `openssl aes-256-cbc -pass pass:<YOUR_PASSWORD_HERE> -in ./<YOUR_PRIVATE_KEYRING> -out ./sign.enc -a`
 6. Place the resulting file `sign.enc` in the project folder `etc`.
