@@ -52,6 +52,6 @@ The following instructions where taken from [this article](http://central.sonaty
 5. Encrypt your private key using the above generated secret `openssl aes-256-cbc -pass pass:<YOUR_PASSWORD_HERE> -in ~/.gnupg/secring.gpg -out ./sign.enc -a`
 6. Place the resulting file `sign.enc` in the project folder `etc`.
 7. Configure the following Travis CI build environment variables
-  * `envSigningKeyId`: The key id within the private key ring to use for signing
-  * `envSigningPassword`: The password for the private key to use for signing
-  * `envKeyringPassword`: The password `<YOUR_PASSWORD_HERE>` to deencrypt the private keyring file.
+  * `envSigningKeyId`: The key id referenced using `<YOUR_KEYID_HERE>` see above.
+  * `envSigningPassword`: The password for the keyring file.
+  * `envKeyringPassword`: The password `<YOUR_PASSWORD_HERE>` to decrypt the private keyring file.
