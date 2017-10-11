@@ -34,6 +34,13 @@ This is a gradle project template. It can be used to create new projects for pub
 
 Clone and check out this template in the latest version. Then copy the content to your empty project and modify the files to fit your needs.
 
+In order to restore the file permissions for the shell scripts in this project run the following command in your project's root folder:
+
+```
+git update-index --chmod=+x ./etc/deploy.sh gradlew
+git commit -m "Changing file permissions"
+```
+
 __When starting a new project from this template perform a text search on the string `~~TODO:~~` do find all places that require modification. The comments lead you to the particular decisions to be made about your project settings.__
 
 ## Publishing to Maven Central
