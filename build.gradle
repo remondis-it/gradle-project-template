@@ -78,11 +78,6 @@ if (project.hasProperty('release')) {
         sign configurations.archives
     }
 
-    nexusStaging {
-    username = ossrhUser
-    password = ossrhPassword
-	}
-
     // OSSRH publication
     uploadArchives {
         repositories {
