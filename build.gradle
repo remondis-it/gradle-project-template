@@ -1,0 +1,128 @@
+buildscript {
+    repositories {
+    	mavenCentral()
+        mavenLocal()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+      classpath "com.diffplug.spotless:spotless-plugin-gradle:3.6.0"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'checkstyle'
+apply plugin: "com.diffplug.gradle.spotless"
+apply plugin: 'signing'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'idea'
+
+group PROJECT_GROUP
+version PROJECT_VERSION
+description PROJECT_DESCRIPTION
+
+repositories {
+    mavenLocal()
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+}
+
+dependencies {
+    testCompile "junit:junit:4.12"
+    testCompile "org.mockito:mockito-core:2.7.17"
+    testCompile "org.assertj:assertj-core:3.5.1"
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "src/main/java"
+        }
+    }
+}
+
+
+checkstyle {
+    configFile = rootProject.file("shared/config/checkstyle/checkstyle.xml")
+    toolVersion = "7.7"
+    maxErrors = 0
+    maxWarnings = 0
+    sourceSets = [project.sourceSets.main]
+}
+
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+
+if (project.hasProperty('release')) {
+
+    // Signature of artifacts
+    signing {
+        sign configurations.archives
+    }
+
+    nexusStaging {
+    username = ossrhUser
+    password = ossrhPassword
+	}
+
+    // OSSRH publication
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                // POM signature
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            	repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: ossrhUser, password: ossrhPassword)
+    		    }
+             	pom.project {
+            		name project.name
+                    description project.description
+                    packaging 'jar'
+                    url = PROJECT_GITHUB_URL
+
+                    scm {
+                        connection PROJECT_GIT_CONNECTION
+                        developerConnection PROJECT_GIT_DEVELOPER_CONNECTION
+                        url PROJECT_HTTP_GIT_URL
+                    }
+
+			        licenses {
+			            license {
+			                name = 'The Apache Software License, Version 2.0'
+			                url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+			                distribution = 'repo'
+			            }
+			        }
+
+                    developers {
+			        	developer {
+			        		name = 'Christopher Schütte'
+			        		email = 'christopher.schuette@remondis.de'
+			        		organization = 'REMONDIS IT Services GmbH & Co. KG'
+			        	}
+
+			        	// TODO: Specify more developers here...
+		        	}
+				}
+            }
+        }
+    }
+}
+

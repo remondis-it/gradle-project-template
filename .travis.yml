@@ -1,0 +1,11 @@
+language: java
+
+before_install:
+- ./etc/before.sh
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: ./etc/deploy.sh
+  on:
+    branch: master
