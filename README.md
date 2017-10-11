@@ -31,4 +31,6 @@ This is a gradle project template. It can be used to create new projects for pub
 
 ## Getting started
 
-When starting a new project from this template perform a text search on the string `~~TODO:~~` do find all places that require modification. The comments lead you to the particular decisions to be made about your project settings.
+Clone and check out this template in the latest version. Then copy the content to your empty project and modify the files to fit your needs.
+
+__When starting a new project from this template perform a text search on the string `~~TODO:~~` do find all places that require modification. The comments lead you to the particular decisions to be made about your project settings.__
