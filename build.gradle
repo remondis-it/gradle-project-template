@@ -18,6 +18,7 @@ apply plugin: 'signing'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'idea'
+apply plugin: 'eclipse'
 
 group PROJECT_GROUP
 version PROJECT_VERSION
@@ -31,6 +32,8 @@ repositories {
 }
 
 dependencies {
+	// ~~TODO:~~ Specify your project dependencies here.
+
     testCompile "junit:junit:4.12"
     testCompile "org.mockito:mockito-core:2.7.17"
     testCompile "org.assertj:assertj-core:3.5.1"
@@ -105,6 +108,10 @@ if (project.hasProperty('release')) {
 
 			        licenses {
 			            license {
+			                /* ~~TODO:~~
+			                 * Specify the project's license here. Note: You should also change the LICENSE file in this
+			                 * project to match the version mentioned here.
+			                 */
 			                name = 'The Apache Software License, Version 2.0'
 			                url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
 			                distribution = 'repo'
@@ -112,13 +119,12 @@ if (project.hasProperty('release')) {
 			        }
 
                     developers {
+						// ~~TODO:~~ Specify your project developers here.
 			        	developer {
 			        		name = 'Christopher Schütte'
 			        		email = 'christopher.schuette@remondis.de'
 			        		organization = 'REMONDIS IT Services GmbH & Co. KG'
 			        	}
-
-			        	// TODO: Specify more developers here...
 		        	}
 				}
             }
