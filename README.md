@@ -46,10 +46,11 @@ In order to publish to Maven Central the project's artifacts must be signed. The
 The following instructions where taken from [this article](http://central.sonatype.org/pages/working-with-pgp-signatures.html). To create a crypted signing key, follow this steps:
 
 1. Generate a GPG Key Pair using GnuPG: `gpg --gen-key`.
-2. List the keys: `gpg2 --list-keys` and expect the output to be something similar to `pub   2048R/<YOUR_KEYID_HERE> 2011-08-31 [expires: 2012-02-27]`
+2. List the keys: `gpg2 --list-keys` and expect the output to be something similar to `pub   2048R/<YOUR_KEYID_HERE> 2011-08-31 [expires: 2012-02-27]`. Choose your key from the list and remember the id of the key you want to use.
 3. Upload the public key to a public key server: `gpg2 --keyserver hkp://pool.sks-keyservers.net --send-keys <YOUR_KEYID_HERE>` or export the public key in ASCII format with `gpg -a --output public-key.asc --export <YOUR_KEYID_HERE>`. The latter can be used if you want to upload the public key to a server using a webinterface like [MIT PGP Public Key Server](http://pgp.mit.edu/).
+5. Export the private key from the keyring with `gpg -a --output private-key.asc --export-secret-keys <YOUR_KEYID_HERE>`
 4. Specify a password used to (de)encrypt the private signing key. This password is referenced by `<YOUR_PASSWORD_HERE>` in the following steps.
-5. Encrypt your private signing key using the above generated secret `openssl aes-256-cbc -pass pass:<YOUR_PASSWORD_HERE> -in ./<YOUR_PRIVATE_KEYRING> -out ./sign.enc -a`
+5. Encrypt your private key using the above generated secret `openssl aes-256-cbc -pass pass:<YOUR_PASSWORD_HERE> -in private-key.asc -out ./sign.enc -a`
 6. Place the resulting file `sign.enc` in the project folder `etc`.
 7. Configure the following Travis CI build environment variables
   * `envSigningKeyId`: The key id within the private key ring to use for signing
