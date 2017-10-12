@@ -5,6 +5,7 @@
 # Table of Contents
 1. [Long story short](#long-story-short)
 2. [Getting started](#getting-started)
+3. [Publishing to Maven Central](#publishing-to-maven-central)
 
 ## Long story short
 
