@@ -48,17 +48,26 @@ __When starting a new project from this template perform a text search on the st
 This project template was created to simplify the project creation for open source projects. Publishing the artifacts produced by a project is the main goal. In order to publish to Maven Central there is a guideline this project template complies to. See [Maven Central OSSRH rules](http://central.sonatype.org/pages/ossrh-guide.html) for more information.
 
 ### Signing the artifacts
-In order to publish to Maven Central the project's artifacts must be signed. The singing key must be available in the project to be used during the build. __Since you do not want to place an unencrypted signing key in the repository__ the key must be encrypted.
+In order to publish to Maven Central the project's artifacts must be signed. This project was configured to use a GPG keyring file to sign the artifacts during the build. __Since you do not want to place an unencrypted signing key in the repository__ the keyrinf file will be encrypted.
 
-The following instructions where taken from [this article](http://central.sonatype.org/pages/working-with-pgp-signatures.html). To create a crypted signing key, follow this steps:
+First of all you need a GPG keyring file containing the private key to be used for signing. Please follow the instructions in [this article](http://central.sonatype.org/pages/working-with-pgp-signatures.html#generating-a-key-pair) to create a GPG keyring file.
 
-1. Generate a GPG Key Pair using GnuPG: `gpg --gen-key`. This command produces a keyring file in `~/.gnupg/secring.gpg`.
-2. List the keys: `gpg --list-keys` and expect the output to be something similar to `pub   2048R/<YOUR_KEYID_HERE> 2011-08-31 [expires: 2012-02-27]`. Choose your key from the list and remember the id of the key you want to use.
-3. Upload the public key to a public key server: `gpg --keyserver hkp://pool.sks-keyservers.net --send-keys <YOUR_KEYID_HERE>` or export the public key in ASCII format with `gpg -a --output public-key.asc --export <YOUR_KEYID_HERE>`. The latter can be used if you want to upload the public key to a server using a webinterface like [MIT PGP Public Key Server](http://pgp.mit.edu/).
-4. Specify a password used to (de)encrypt the private signing key. This password is referenced by `<YOUR_PASSWORD_HERE>` in the following steps.
-5. Encrypt your private key using the above generated secret `openssl aes-256-cbc -pass pass:<YOUR_PASSWORD_HERE> -in ~/.gnupg/secring.gpg -out ./sign.enc -a`
-6. Place the resulting file `sign.enc` in the project folder `etc`.
-7. Configure the following Travis CI build environment variables
-  * `envSigningKeyId`: The key id referenced using `<YOUR_KEYID_HERE>` see above.
-  * `envSigningPassword`: The password for the keyring file.
-  * `envKeyringPassword`: The password `<YOUR_PASSWORD_HERE>` to decrypt the private keyring file.
+Once you created the GPG keyring you can follow this instructions to encrypt it and make the keyring available for this project.
+
+1. Please run the script `./encrypt-keyring-sh` in this project.
+2. Specify the path to the GPG keyring file or simply hit [ENTER] to use the keyring file from your home directory.
+3. Specify the password to encrypt the keyring file.
+4. Retype the password.
+5. The script now encrypts the keyring file and writes it to `etc/sign.enc`. __Your encrypted keyring file is now part of this project and will be comitted.__
+6. The script gives you a hint which variable must be present in the Travis CI build. Since the variable must be bash-escaped, the script prints out the password in the escaped version. This makes it simple for you to configure the variable in Travis CI.
+7. Double check the configuration in Travis CI and make sure that __the flag "Display value in build log" is disabled__ for the secret environment variables.
+
+8. Commit
+
+### How to publish to Maven Central
+
+In order to publish to Maven Central please follow [this instructions](http://central.sonatype.org/pages/ossrh-guide.html). This article describes the steps to get access to OSSRH via a personal account. After this process you were granted access to your staging repository where you can publish artifacts of your registered namespace. Please create a singing key as described [above](#signing-the-artifacts).
+
+This project is configured to publish to an OSSRH staging repository. If the signing key was created and valid the project is able to upload artifacts to the staging repository. The build is pre-configured to perform the neccessary steps. __The upload of artifacts is only triggered on Travis CI builds running on branch "master".__
+
+If the build on branch "master" succeeded, the artifacts are accessible via the [OSS webinterface](https://oss.sonatype.org/#welcome). __In order to release the staged artifacts, perform the close and release operations manually as described [here](http://central.sonatype.org/pages/releasing-the-deployment.html).__

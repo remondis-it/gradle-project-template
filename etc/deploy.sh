@@ -9,14 +9,16 @@ ossrhPassword=${envOssrhPassword}
 
 signing.keyId=${envSigningKeyId}
 signing.password=${envSigningPassword}
-signing.secretKeyRingFile=./etc/secring.gpg
+signing.secretKeyRingFile=./etc/secring-decrypted.gpg
 EOF
 
 echo "Completed gradle.properties"
 
 echo "Decrypting Sign Key..."
 
-gpg --passphrase $envKeyringPassword -o ./etc/secring.gpg -d ./etc/sign.enc
+md5sum ./etc/sign.enc
+openssl aes-256-cbc -d -pass "pass:$envKeyringPassword" -in ./etc/sign.enc -out ./etc/secring-decrypted.gpg
+md5sum ./etc/secring-decrypted.gpg
 
 echo "Starting task 'uploadArchives'..."
 ./gradlew uploadArchives -Prelease
